@@ -1,0 +1,8 @@
+{
+  "runtimeOptions": {
+    "additionalProbingPaths": [
+      "C:\\Users\\leeka\\.dotnet\\store\\|arch|\\|tfm|",
+      "C:\\Users\\leeka\\.nuget\\packages"
+    ]
+  }
+}
