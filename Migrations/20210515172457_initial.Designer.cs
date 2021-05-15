@@ -10,8 +10,8 @@ using mvcApp.Data;
 namespace mvcApp.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20210515142005_initials")]
-    partial class initials
+    [Migration("20210515172457_initial")]
+    partial class initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

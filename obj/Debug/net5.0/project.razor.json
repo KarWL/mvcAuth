@@ -15619,8 +15619,18 @@
   "RootNamespace": "mvcApp",
   "Documents": [
     {
+      "FilePath": "c:\\Users\\leeka\\OneDrive\\Documents\\MVC\\mvcApp\\Views\\PropertyInfo\\Create.cshtml",
+      "TargetPath": "Views\\PropertyInfo\\Create.cshtml",
+      "FileKind": "mvc"
+    },
+    {
       "FilePath": "c:\\Users\\leeka\\OneDrive\\Documents\\MVC\\mvcApp\\Views\\Shared\\Error.cshtml",
       "TargetPath": "Views\\Shared\\Error.cshtml",
+      "FileKind": "mvc"
+    },
+    {
+      "FilePath": "c:\\Users\\leeka\\OneDrive\\Documents\\MVC\\mvcApp\\Views\\PropertyInfo\\Delete.cshtml",
+      "TargetPath": "Views\\PropertyInfo\\Delete.cshtml",
       "FileKind": "mvc"
     },
     {
@@ -15646,6 +15656,16 @@
     {
       "FilePath": "c:\\Users\\leeka\\OneDrive\\Documents\\MVC\\mvcApp\\Areas\\Identity\\Pages\\_ViewImports.cshtml",
       "TargetPath": "Areas\\Identity\\Pages\\_ViewImports.cshtml",
+      "FileKind": "mvc"
+    },
+    {
+      "FilePath": "c:\\Users\\leeka\\OneDrive\\Documents\\MVC\\mvcApp\\Views\\PropertyInfo\\Details.cshtml",
+      "TargetPath": "Views\\PropertyInfo\\Details.cshtml",
+      "FileKind": "mvc"
+    },
+    {
+      "FilePath": "c:\\Users\\leeka\\OneDrive\\Documents\\MVC\\mvcApp\\Views\\PropertyInfo\\Edit.cshtml",
+      "TargetPath": "Views\\PropertyInfo\\Edit.cshtml",
       "FileKind": "mvc"
     },
     {
@@ -15679,6 +15699,11 @@
       "FileKind": "mvc"
     },
     {
+      "FilePath": "c:\\Users\\leeka\\OneDrive\\Documents\\MVC\\mvcApp\\Views\\PropertyInfo\\ErrorPage.cshtml",
+      "TargetPath": "Views\\PropertyInfo\\ErrorPage.cshtml",
+      "FileKind": "mvc"
+    },
+    {
       "FilePath": "c:\\Users\\leeka\\OneDrive\\Documents\\MVC\\mvcApp\\Views\\Home\\Privacy.cshtml",
       "TargetPath": "Views\\Home\\Privacy.cshtml",
       "FileKind": "mvc"
@@ -15689,8 +15714,18 @@
       "FileKind": "mvc"
     },
     {
+      "FilePath": "c:\\Users\\leeka\\OneDrive\\Documents\\MVC\\mvcApp\\Views\\PropertyInfo\\Index.cshtml",
+      "TargetPath": "Views\\PropertyInfo\\Index.cshtml",
+      "FileKind": "mvc"
+    },
+    {
       "FilePath": "c:\\Users\\leeka\\OneDrive\\Documents\\MVC\\mvcApp\\Areas\\Identity\\Pages\\_ValidationScriptsPartial.cshtml",
       "TargetPath": "Areas\\Identity\\Pages\\_ValidationScriptsPartial.cshtml",
+      "FileKind": "mvc"
+    },
+    {
+      "FilePath": "c:\\Users\\leeka\\OneDrive\\Documents\\MVC\\mvcApp\\Views\\PropertyInfo\\Users.cshtml",
+      "TargetPath": "Views\\PropertyInfo\\Users.cshtml",
       "FileKind": "mvc"
     }
   ],
