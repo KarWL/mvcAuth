@@ -26,6 +26,7 @@ namespace mvcApp.Controllers
             propertyInfo.AssetName = Name;
             propertyInfo.AssetType = Type;
             propertyInfo.Description = Description;
+            propertyInfo.UserId = UserId;
 
             var user = _context.Users.FirstOrDefault(m => m.Id == UserId);
 
@@ -170,8 +171,9 @@ namespace mvcApp.Controllers
             {
                 return NotFound();
             }
-            var data = await _context.PropertyInfo
-                    .FirstOrDefaultAsync(m => m.UserId == id);
+            var data = await _context.Users
+            .Include(x => x.PropertyInfos)
+            .FirstOrDefaultAsync(m => m.Id == id);
 
             if (data == null)
             {

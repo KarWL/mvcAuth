@@ -1,4 +1,4 @@
-@model mvcApp.Models.PropertyInfo
+@model mvcApp.Models.ApplicationUser
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet"
     integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js"
@@ -19,10 +19,10 @@
 </dd>
 
 <dt class="col-sm-2">
-    @Html.DisplayNameFor(model => model.AssetName)
+    @Html.DisplayNameFor(model => model.UserName)
 </dt>
 <dd class="col-sm-2">
-    @Html.DisplayFor(model => model.AssetName)
+    @Html.DisplayFor(model => model.UserName)
 </dd>
 
 
@@ -46,7 +46,7 @@
                 "UserId": $(UserId).val()
             },
             success: function (response) {
-               window.location.href="/PropertyInfo/Details/" +' @Model.Id';
+               window.location.href="/PropertyInfo/Details/" + '@Model.Id';
             },
             failure: function (response) {
                 alert(response.responseText);
