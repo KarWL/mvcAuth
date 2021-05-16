@@ -10,9 +10,19 @@ namespace mvcApp.Models
 
         [Display(Name = "Assest Id")]
         [DataType(DataType.Text)]
-        public Guid Id { get; set; }     
+        public Guid Id { get; set; }
+        
+        [Display(Name = "Assest Name")]
+        [DataType(DataType.Text)]
+        [Required]
         public string AssetName { get; set; }
+
+        [Display(Name = "Assest Type")]
+        [DataType(DataType.Text)]
         public string AssetType { get; set; }
+
+        [Display(Name = "Description")]
+        [DataType(DataType.Text)]
         public string Description { get; set; }
 
         public string UserId {get; set;}

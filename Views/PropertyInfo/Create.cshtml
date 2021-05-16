@@ -1,38 +1,44 @@
 @model mvcApp.Models.ApplicationUser
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet"
-    integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js"
-    integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4"
-    crossorigin="anonymous"></script>
-
 @{
-    ViewData["Title"] = "Assets Management";
+    ViewData["Title"] = "Property Management";
 }
 
-<h2>Asset from Propertyinfo </h2>
+<h2>Create Property</h2>
 
-<dt class="col-sm-2">
+<dt class="col-sm-4">
     @Html.DisplayNameFor(model => model.Id)
 </dt>
-<dd class="col-sm-2">
+<dd class="col-sm-4">
     @Html.DisplayFor(model => model.Id)
 </dd>
 
-<dt class="col-sm-2">
+<dt class="col-sm-4">
     @Html.DisplayNameFor(model => model.UserName)
 </dt>
-<dd class="col-sm-2">
+<dd class="col-sm-4">
     @Html.DisplayFor(model => model.UserName)
 </dd>
 
 
 <form>
-    <input type="text" id="Name" name="Name" placeholder="Name" />
-    <input type="text" id="Type" name="Type" placeholder="Type" />
-    <input type="text" id="Description" name="Description" placeholder="Description" />
-    <input type="text" id="UserId" name="UserId" placeholder="Id" value="@Model.Id" hidden=True />
+    <div class="mb-3">
+        <label class="form-label" for="fname">Asset Name:</label>
+        <input class="form-control"  type="text" id="Name" name="Name" placeholder="Asset Name" />
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label" for="fname">Asset Type:</label><br>
+        <input class="form-control"  type="text" id="Type" name="Type" placeholder="Asset Type" />
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label" for="fname">Asset Description:</label>
+        <input class="form-control"  type="text" id="Description" name="Description" placeholder="Description" />
+        <input type="text" id="UserId" name="UserId" placeholder="Id" value="@Model.Id" hidden=True />
+    </div>
     <input value="Create" class="btn btn-primary" onclick="CreatePropertyInfo()">
-    </form>
+</form>
+
 
 <script type="text/javascript">
     function CreatePropertyInfo() {
@@ -46,7 +52,7 @@
                 "UserId": $(UserId).val()
             },
             success: function (response) {
-               window.location.href="/PropertyInfo/Details/" + '@Model.Id';
+                window.location.href = "/PropertyInfo/Details/" + '@Model.Id';
             },
             failure: function (response) {
                 alert(response.responseText);
