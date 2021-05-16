@@ -16,6 +16,13 @@ namespace mvcApp.Controllers
 {
     public class PropertyInfoController : Controller
     {
+        public struct loginInInfo
+        {
+            public bool isLogin { get; set; }
+
+            public string userId { get; set; }
+        }
+
         private readonly ApplicationDbContext _context;
 
         public virtual ClaimsPrincipal LoginUser { get; }
@@ -25,6 +32,26 @@ namespace mvcApp.Controllers
         public PropertyInfoController(ApplicationDbContext context)
         {
             _context = context;
+        }
+        public loginInInfo isUserLogin()
+        {
+            loginInInfo loginInfo = new loginInInfo();
+            System.Security.Claims.ClaimsPrincipal currentUser = this.User;
+            var isUserLogin = currentUser.Identity.IsAuthenticated;
+            if (!isUserLogin)
+            {
+                loginInfo.isLogin = false;
+                loginInfo.userId = null;
+            }
+
+            if (isUserLogin)
+            {
+                var currentUserID = currentUser.FindFirst(ClaimTypes.NameIdentifier).Value;
+                loginInfo.isLogin = true;
+                loginInfo.userId = currentUserID;
+            }
+
+            return loginInfo;
         }
 
         public JsonResult CreatePropertyInfo(string Name, string Type, string Description, string UserId)
@@ -36,6 +63,7 @@ namespace mvcApp.Controllers
             propertyInfo.UserId = UserId;
 
             var user = _context.Users.FirstOrDefault(m => m.Id == UserId);
+            propertyInfo.User = user;
 
             _context.Add(propertyInfo);
             _context.SaveChanges();
@@ -58,6 +86,14 @@ namespace mvcApp.Controllers
         //create page
         public async Task<IActionResult> Create(string id)
         {
+            loginInInfo createCheckLogin = isUserLogin();
+            ReturnUrl ??= Url.Content("/Identity/Account/Login");
+
+            if (!createCheckLogin.isLogin)
+            {
+                return LocalRedirect(ReturnUrl);
+            }
+
             if (id == null)
             {
                 return NotFound();
@@ -79,17 +115,15 @@ namespace mvcApp.Controllers
         public async Task<IActionResult> Edit(Guid id)
         {
             //reroute back to homepage.
+            loginInInfo editCheckLogin = isUserLogin();
             ReturnUrl ??= Url.Content("/Identity/Account/Login");
 
-            System.Security.Claims.ClaimsPrincipal currentUser = this.User;
-            var isUserLogin = currentUser.Identity.IsAuthenticated;
-            if (!isUserLogin)
+            if (!editCheckLogin.isLogin)
             {
                 return LocalRedirect(ReturnUrl);
             }
-            var currentUserID = currentUser.FindFirst(ClaimTypes.NameIdentifier).Value;
 
-            if (currentUserID == null)
+            if (editCheckLogin.userId == null)
             {
                 return NotFound();
             }
@@ -108,49 +142,69 @@ namespace mvcApp.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid id, [Bind("Id,AssetName,AssetType,Description, UserId")] PropertyInfo propertyInfo)
-        {          
-            if (id != propertyInfo.Id)
+        public async Task<IActionResult> Edit(Guid? id)
+        {
+
+            if (id == null)
             {
                 return NotFound();
             }
 
-            System.Security.Claims.ClaimsPrincipal currentUser = this.User;
-            var isUserLogin = currentUser.Identity.IsAuthenticated;
-            if (!isUserLogin)
+            loginInInfo postEditCheckLogin = isUserLogin();
+            ReturnUrl ??= Url.Content("/Identity/Account/Login");
+
+            if (!postEditCheckLogin.isLogin)
             {
                 return LocalRedirect(ReturnUrl);
             }
-            var currentUserID = currentUser.FindFirst(ClaimTypes.NameIdentifier).Value;
 
-            if (currentUserID == null || propertyInfo.UserId != currentUserID)
+            if (postEditCheckLogin.userId == null)
             {
                 return NotFound();
             }
 
-            ApplicationUser user = _context.ApplicationUser.FirstOrDefault(x=>x.Id == currentUserID);
-            propertyInfo.User = user;
+            var propertyToUpdate = await _context.PropertyInfo
+            .Include(i => i.User)
+            .FirstOrDefaultAsync(s => s.Id == id && s.UserId == postEditCheckLogin.userId);
 
-            var data = await _context.PropertyInfo
-                    .FirstOrDefaultAsync(m => m.Id == id);
+            if (propertyToUpdate == null)
+            {
+                Response.StatusCode = 404;
+                return View("ErrorPage", id.Value);
+            }
 
-            if (ModelState.IsValid)
+            if (await TryUpdateModelAsync<PropertyInfo>(propertyToUpdate, "", i => i.AssetName, i => i.AssetType, i => i.Description))
             {
                 try
                 {
-                    _context.Update(propertyInfo);
                     await _context.SaveChangesAsync();
                 }
-                catch (DbUpdateConcurrencyException)
+                catch (DbUpdateException /* ex */)
                 {
-
+                    //Log the error (uncomment ex variable name and write a log.)
+                    ModelState.AddModelError("", "Unable to save changes. " +
+                        "Try again, and if the problem persists, " +
+                        "see your system administrator.");
                 }
                 return RedirectToAction("Details");
+
             }
-            return View(propertyInfo);
+            return RedirectToAction("Details");
         }
         public async Task<IActionResult> Delete(Guid? id, bool? saveChangesError = false)
         {
+            loginInInfo deleteCheckLogin = isUserLogin();
+            ReturnUrl ??= Url.Content("/Identity/Account/Login");
+
+            if (!deleteCheckLogin.isLogin)
+            {
+                return LocalRedirect(ReturnUrl);
+            }
+
+            if (deleteCheckLogin.userId == null)
+            {
+                return NotFound();
+            }
 
             if (id == null)
             {
@@ -174,17 +228,29 @@ namespace mvcApp.Controllers
         // [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
-            var asset = await _context.PropertyInfo.FindAsync(id);
+            loginInInfo postDeleteCheckLogin = isUserLogin();
+            ReturnUrl ??= Url.Content("/Identity/Account/Login");
+
+            if (!postDeleteCheckLogin.isLogin)
+            {
+                return LocalRedirect(ReturnUrl);
+            }
+
+            if (postDeleteCheckLogin.userId == null)
+            {
+                return NotFound();
+            }
+            var asset = await _context.PropertyInfo.FirstOrDefaultAsync(x=>x.Id == id && x.UserId == postDeleteCheckLogin.userId);
             if (asset == null)
             {
-                return RedirectToAction(nameof(Users));
+                return RedirectToAction(nameof(Details));
             }
 
             try
             {
                 _context.PropertyInfo.Remove(asset);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Users));
+                return RedirectToAction(nameof(Details));
             }
             catch (DbUpdateException /* ex */)
             {
@@ -200,41 +266,38 @@ namespace mvcApp.Controllers
             //reroute back to homepage.
             ReturnUrl ??= Url.Content("/Identity/Account/Login");
 
-            System.Security.Claims.ClaimsPrincipal currentUser = this.User;
-            var isUserLogin = currentUser.Identity.IsAuthenticated;
-            if (!isUserLogin)
+            loginInInfo checkLogin = isUserLogin();
+
+            if (!checkLogin.isLogin)
             {
                 return LocalRedirect(ReturnUrl);
             }
-            var currentUserID = currentUser.FindFirst(ClaimTypes.NameIdentifier).Value;
 
-            if (currentUserID == null)
+            if (checkLogin.userId == null)
             {
                 return NotFound();
             }
+
+
             var data = await _context.Users
             .Include(x => x.PropertyInfos)
-            .FirstOrDefaultAsync(m => m.Id == currentUserID);
+            .FirstOrDefaultAsync(m => m.Id == checkLogin.userId);
 
             if (data == null)
             {
                 Response.StatusCode = 404;
-                return View("ErrorPage", currentUserID);
+                return View("ErrorPage", checkLogin.userId);
             }
 
             return View(data);
         }
 
-        // public IActionResult Create()
-        // {
-        //     return View();
-        // }
-
-        //error
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
+
+
     }
 }
