@@ -2,7 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.V4.Pages.Account.Internal;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -14,6 +17,10 @@ namespace mvcApp.Controllers
     public class PropertyInfoController : Controller
     {
         private readonly ApplicationDbContext _context;
+
+        public virtual ClaimsPrincipal LoginUser { get; }
+
+        public string ReturnUrl { get; set; }
 
         public PropertyInfoController(ApplicationDbContext context)
         {
@@ -69,19 +76,31 @@ namespace mvcApp.Controllers
         }
 
         //edit page
-        public async Task<IActionResult> Edit(Guid? id)
+        public async Task<IActionResult> Edit(Guid id)
         {
-            if (id == null)
+            //reroute back to homepage.
+            ReturnUrl ??= Url.Content("/Identity/Account/Login");
+
+            System.Security.Claims.ClaimsPrincipal currentUser = this.User;
+            var isUserLogin = currentUser.Identity.IsAuthenticated;
+            if (!isUserLogin)
+            {
+                return LocalRedirect(ReturnUrl);
+            }
+            var currentUserID = currentUser.FindFirst(ClaimTypes.NameIdentifier).Value;
+
+            if (currentUserID == null)
             {
                 return NotFound();
             }
+
             var data = await _context.PropertyInfo
                     .FirstOrDefaultAsync(m => m.Id == id);
 
             if (data == null)
             {
                 Response.StatusCode = 404;
-                return View("ErrorPage", id.Value);
+                return View("ErrorPage", id);
             }
 
             return View(data);
@@ -89,25 +108,36 @@ namespace mvcApp.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid id, [Bind("Id,Name,Type,Description")] PropertyInfo propertyInfo)
-        {
+        public async Task<IActionResult> Edit(Guid id, [Bind("Id,AssetName,AssetType,Description, UserId")] PropertyInfo propertyInfo)
+        {          
             if (id != propertyInfo.Id)
             {
                 return NotFound();
             }
 
+            System.Security.Claims.ClaimsPrincipal currentUser = this.User;
+            var isUserLogin = currentUser.Identity.IsAuthenticated;
+            if (!isUserLogin)
+            {
+                return LocalRedirect(ReturnUrl);
+            }
+            var currentUserID = currentUser.FindFirst(ClaimTypes.NameIdentifier).Value;
+
+            if (currentUserID == null || propertyInfo.UserId != currentUserID)
+            {
+                return NotFound();
+            }
+
+            ApplicationUser user = _context.ApplicationUser.FirstOrDefault(x=>x.Id == currentUserID);
+            propertyInfo.User = user;
+
+            var data = await _context.PropertyInfo
+                    .FirstOrDefaultAsync(m => m.Id == id);
+
             if (ModelState.IsValid)
             {
                 try
                 {
-
-                    //var data = await _context.PropertyInfo
-                    //.FirstOrDefaultAsync(m => m.Id == id);
-                    //Users user = data.User;
-
-                    //propertyInfo.User = user;
-                    //propertyInfo.UserId = user.Id;
-
                     _context.Update(propertyInfo);
                     await _context.SaveChangesAsync();
                 }
@@ -115,7 +145,7 @@ namespace mvcApp.Controllers
                 {
 
                 }
-                return RedirectToAction("Users");
+                return RedirectToAction("Details");
             }
             return View(propertyInfo);
         }
@@ -165,20 +195,31 @@ namespace mvcApp.Controllers
 
 
         //details page
-        public async Task<IActionResult> Details(string id)
+        public async Task<IActionResult> Details(string ReturnUrl)
         {
-            if (id == null)
+            //reroute back to homepage.
+            ReturnUrl ??= Url.Content("/Identity/Account/Login");
+
+            System.Security.Claims.ClaimsPrincipal currentUser = this.User;
+            var isUserLogin = currentUser.Identity.IsAuthenticated;
+            if (!isUserLogin)
+            {
+                return LocalRedirect(ReturnUrl);
+            }
+            var currentUserID = currentUser.FindFirst(ClaimTypes.NameIdentifier).Value;
+
+            if (currentUserID == null)
             {
                 return NotFound();
             }
             var data = await _context.Users
             .Include(x => x.PropertyInfos)
-            .FirstOrDefaultAsync(m => m.Id == id);
+            .FirstOrDefaultAsync(m => m.Id == currentUserID);
 
             if (data == null)
             {
                 Response.StatusCode = 404;
-                return View("ErrorPage", id);
+                return View("ErrorPage", currentUserID);
             }
 
             return View(data);
