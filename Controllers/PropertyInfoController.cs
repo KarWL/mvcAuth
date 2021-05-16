@@ -84,7 +84,7 @@ namespace mvcApp.Controllers
         }
 
         //create page
-        public async Task<IActionResult> Create(string id)
+        public async Task<IActionResult> Create()
         {
             loginInInfo createCheckLogin = isUserLogin();
             ReturnUrl ??= Url.Content("/Identity/Account/Login");
@@ -93,19 +93,19 @@ namespace mvcApp.Controllers
             {
                 return LocalRedirect(ReturnUrl);
             }
-
-            if (id == null)
+            if (string.IsNullOrEmpty(createCheckLogin.userId))
             {
-                return NotFound();
+                return LocalRedirect(ReturnUrl);
             }
+
             var data = await _context.Users
             .Include(x => x.PropertyInfos)
-            .FirstOrDefaultAsync(m => m.Id == id);
+            .FirstOrDefaultAsync(m => m.Id == createCheckLogin.userId);
 
             if (data == null)
             {
                 Response.StatusCode = 404;
-                return View("ErrorPage", id);
+                return View("ErrorPage", createCheckLogin.userId);
             }
 
             return View(data);

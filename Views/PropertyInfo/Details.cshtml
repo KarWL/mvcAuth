@@ -8,22 +8,7 @@
 }
 
 <h2>Property(s) Management</h2>
-
-<dt class="col-sm-4">
-    @Html.DisplayNameFor(model => model.Id)
-</dt>
-<dd class="col-sm-4">
-    @Html.DisplayFor(model => model.Id)
-</dd>
-
-<dt class="col-sm-4">
-    @Html.DisplayNameFor(model => model.UserName)
-</dt>
-<dd class="col-sm-4">
-    @Html.DisplayFor(model => model.UserName)
-</dd>
-
-<a asp-action="Create" class="btn btn-primary" asp-route-id=@Model.Id>
+<a asp-action="Create" class="btn btn-primary " style="float: right;">
     Create
 </a>
 <br /><br /><br />
