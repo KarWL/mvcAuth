@@ -10,7 +10,7 @@ Run the application, you should see the web application.
 1. Reigster with any email and password. (Email Confirmed is set to true by default, mean can straight login once register success) When the registration is success, login with the account credential. 
 2. Once login success, you will be show the homepage. Go to the top bar and click the details tab. 
 3. In there, you should be able to see the Property(s) Managmenet Title. Beneath it on the right side has a create button. Click it and fill in the necessary information
-for the property. **Name is mandatory type. Please fill it. Leave it blank will cause an error pop-up, click okay and fill the detail in the Name Text box.** 
+for the property (Name, Type , Description). **Name is mandatory type. Please fill it. Leave it blank will cause an error pop-up. If an error pop up due to the name field is emtpy, click okay and fill the detail in the Name Text box.** Once information is filled, click the create button.
 4. Once the property is successful created. It will be shown in the *Property(s) Management* page. You can try to create few more property for the edit and delete action. 
 5. Select any of the created property in the grid to edit the property info. Fill in the edit details and save. 
 6. Select any of the property in the grid to delete it. Click the delete button to confirm to delete it. If not, click any of the tab button on top. 
