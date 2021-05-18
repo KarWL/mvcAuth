@@ -3,8 +3,10 @@
 Configuration - setup databse connection
 1. Open appsettings.json. Change the connection string to connect with your database provider. 
 2. Run the command : 
--* dotnet ef migrations <OUTPUT_NAME>*
--*dotnet ef database update*
+```
+dotnet ef migrations <OUTPUT_NAME>
+dotnet ef database update
+```
 3. Open databse management tools to check the table "PropertyInfo" and asp.net identity database related table. 
 
 Steps to use the application
@@ -19,4 +21,4 @@ Steps to use the application
 9. Select any of the record in the grid and press the edit button on the right side. Amemnd the details and save.
 10. Select any of the property in the grid and press the delete button on the right side. Click the delete button to confirm to delete it.
 
-You can perform the same action with different account. The application will only show the data that is belong to the user.
+You can perform the same action with different account. The application will only show the data that is belong to the login user.
