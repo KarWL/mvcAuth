@@ -9,6 +9,8 @@ dotnet ef database update
 ```
 3. Open databse management tools to check the table "PropertyInfo" and asp.net identity database related table. 
 
+
+
 Steps to use the application
 1. Run the application.
 2. Reigster with any email and password.
