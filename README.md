@@ -1,9 +1,11 @@
 # mvcAuth
 
 Configuration - setup databse connection
-1. Open up the appsettings.json. Go to the ConnectionStrings block{}. Change the connection string inside to connect with your database provider. 
-2. Run the command to perform the dotnet ef migrations and databse update. Once finished, open the databse management tools to check the table created. "PropertyInfo" and asp.net identity
-database related table. 
+1. Open appsettings.json. Change the connection string to connect with your database provider. 
+2. Run the command : 
+-* dotnet ef migrations <OUTPUT_NAME>*
+-*dotnet ef database update*
+3. Open databse management tools to check the table "PropertyInfo" and asp.net identity database related table. 
 
 Steps to use the application
 1. Run the application.
