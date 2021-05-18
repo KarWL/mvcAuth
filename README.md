@@ -4,7 +4,7 @@ Configuration - setup databse connection
 1. Open appsettings.json. Change the connection string to connect with your database provider. 
 2. Run the command : 
 ```
-dotnet ef migrations <OUTPUT_NAME>
+dotnet ef migrations init
 dotnet ef database update
 ```
 3. Open databse management tools to check the table "PropertyInfo" and asp.net identity database related table. 
